@@ -169,5 +169,5 @@ class Style:
                 }
 
                 .row {
-                    column-count: 2;
+                    column-count: 1;
                 }"""
