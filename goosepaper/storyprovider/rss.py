@@ -48,14 +48,25 @@ class RSSFeedStoryProvider(StoryProvider):
                     date=date,
                 )
             else:
-                doc = Document(req.content)
-                story = Story(
-                    doc.title(),
-                    body_html=doc.summary(),
-                    byline=source,
-                    date=date,
-                )
-
+                try:
+                    # Usiamo .text ma forziamo l'encoding se necessario
+                    html_content = req.text if req.text else ""
+                    doc = Document(html_content)
+                    story = Story(
+                        doc.title(),
+                        body_html=doc.summary(),
+                        byline=source,
+                        date=date,
+                    )
+                except Exception as e:
+                    print(f"Error processing story from {source}: {e}")
+                    # Se readability fallisce, usiamo i dati base del feed RSS
+                    story = Story(
+                        entry.get("title", "No Title"),
+                        body_html=entry.get("summary", "No Content"),
+                        byline=source,
+                        date=date,
+                    )
             stories.append(story)
             if len(stories) >= limit:
                 break

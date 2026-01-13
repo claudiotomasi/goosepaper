@@ -1,12 +1,13 @@
 {
     "font_size": 12,
+    "style" : "Prova",
     "stories": [
         {
             "provider": "weather",
             "config": {
-                "lat": 36.5,
-                "lon": -75.1,
-                "F": true
+                "lat": 45.1850,
+                "lon": 9.1550,
+                "F": false
             }
         },
         {
@@ -16,28 +17,71 @@
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://feeds.npr.org/1001/rss.xml",
+                "rss_path": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
                 "limit": 5
-            }
-        },
-        {
-            "provider": "reddit",
-            "config": {
-                "subreddit": "news"
-            }
-        },
-        {
-            "provider": "reddit",
-            "config": {
-                "subreddit": "todayilearned"
             }
         },
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://krebsonsecurity.com/feed/",
-                "limit": 1,
-                "skip": true
+                "rss_path": "https://www.ilsole24ore.com/rss/mondo.xml ",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilpost.it/mondo/feed/",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://leganerd.com/feed/",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.focus.it/rss/scienza.rss",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.tomshw.it/feed/scienze",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "http://feeds.bbci.co.uk/news/world/rss.xml",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://feeds.arstechnica.com/arstechnica/index",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilpost.it/bits/feed/",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilsole24ore.com/rss/viaggi.xml",
+                "limit": 5
             }
         }
     ]
