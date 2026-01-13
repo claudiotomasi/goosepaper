@@ -1,0 +1,28 @@
+name: Generate Newspaper via Docker
+on: 
+  workflow_dispatch: # Questo ti permette di farlo partire con un click
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    # Qui diciamo a GitHub di usare il TUO Docker che hai appena pushato
+    container:
+      image: ghcr.io/claudiotomasi/goosepaper:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Goosepaper inside Docker
+        # Usiamo il file di configurazione che hai nel repo
+        run: |
+          goosepaper -c example-config.json -o IL_MIO_GIORNALE.pdf
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-newspaper-pdf
+          path: IL_MIO_GIORNALE.pdf
