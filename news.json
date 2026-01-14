@@ -34,6 +34,6 @@
                 "rss_path": "https://www.ilpost.it/mondo/feed/",
                 "limit": 5
             }
-        },
+        }
     ]
 }
