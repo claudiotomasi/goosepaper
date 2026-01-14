@@ -34,13 +34,14 @@ jobs:
           name: pdf-${{ matrix.config }}
           path: out/*.pdf
 
-  upload:
+    upload:
     runs-on: ubuntu-latest
     needs: generate
 
     steps:
       - uses: actions/download-artifact@v4
         with:
+          name: pdf
           path: out
 
       - name: Upload to Google Drive
@@ -53,3 +54,4 @@ jobs:
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
           args: 'copy ./out gdrive:${{ env.DATE }} --include "*.pdf"'
+
