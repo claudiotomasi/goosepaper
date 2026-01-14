@@ -12,17 +12,26 @@ jobs:
     steps:
       - name: Generate Token
         run: |
-          pip install rmapy
           python -c "
-          import rmapy.api
-          rm = rmapy.api.Client()
-          try:
-              # La registrazione restituisce direttamente il token
-              token = rm.register_device('${{ github.event.inputs.rm_code }}')
-              print('\n' + '*' * 40)
-              print('IL TUO DEVICE TOKEN E:')
-              print(token)
-              print('*' * 40 + '\n')
-          except Exception as e:
-              print(f'Errore durante la registrazione: {e}')
+          import requests
+          import uuid
+          
+          # Nuovo endpoint per la registrazione dispositivi
+          url = 'https://webapp-production-dot-remarkable-production.appspot.com/token/json/2/device/new'
+          
+          payload = {
+              'code': '${{ github.event.inputs.rm_code }}',
+              'deviceDesc': 'desktop-linux',
+              'deviceID': str(uuid.uuid4())
+          }
+          
+          res = requests.post(url, json=payload)
+          
+          if res.status_code == 200:
+              print('\n' + '='*40)
+              print('COPIA QUESTO TOKEN (stringa lunga):')
+              print(res.text) 
+              print('='*40 + '\n')
+          else:
+              print(f'Errore {res.status_code}: {res.text}')
           "
