@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        config: [news, nerd_science, altro]
+        config: [news, nerd_science]
 
     steps:
       - name: Checkout Code
