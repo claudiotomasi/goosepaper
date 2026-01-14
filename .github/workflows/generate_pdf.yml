@@ -6,12 +6,10 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
         config: [news, nerd_science, altro]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,7 +21,6 @@ jobs:
         run: |
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
           mkdir -p out
-
           docker run --rm --init \
             -v ${{ github.workspace }}:/mount \
             ghcr.io/claudiotomasi/goosepaper:latest \
@@ -39,19 +36,17 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     needs: generate
-
     steps:
+      - name: Set date (necessario anche qui)
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          path: all_pdfs
+          merge-multiple: true # Mette tutti i PDF nella stessa cartella senza sottocartelle degli artifact
 
-      - name: Flatten PDFs into dated folder
-        run: |
-          mkdir -p out/${{ env.DATE }}
-          find artifacts -name "*.pdf" -exec mv {} out/${{ env.DATE }}/ \;
-
-      - name: Create folder on Google Drive
+      - name: Upload to Google Drive
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
@@ -60,15 +55,5 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          args: 'mkdir gdrive:${{ env.DATE }}'
-
-      - name: Upload PDFs to Google Drive
-        uses: wei/rclone@v1
-        env:
-          RCLONE_CONFIG_GDRIVE_TYPE: drive
-          RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
-          RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
-          RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
-        with:
-          args: 'copy ./out/${{ env.DATE }} gdrive:${{ env.DATE }} --include "*.pdf"'
-
+          # Spieghiamo a rclone: prendi quello che c'è in all_pdfs e mettilo nella cartella DATE
+          args: 'copy ./all_pdfs gdrive:${{ env.DATE }}'
