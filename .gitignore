@@ -143,3 +143,8 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/code,python,macos
+
+
+.workflows/docker-publish.yml
+.workflows/dockerhub-publish.yml
+.workflows/python-package.yml
