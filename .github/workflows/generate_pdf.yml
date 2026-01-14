@@ -15,21 +15,26 @@ jobs:
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Run Goosepaper for all configs
+      -- name: Run Goosepaper for all configs
         run: |
-          # 1. Scarica l'immagine una volta sola per velocizzare i passaggi successivi
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
           
-          # 2. Inserisci qui i nomi dei tuoi file .json (senza estensione) separati da spazi
           CONFIGS=("news" "news2")
           
           for TYPE in "${CONFIGS[@]}"; do
             echo "------------------------------------------"
-            echo "Generazione in corso: $TYPE..."
-            echo "------------------------------------------"
+            echo "Inizio elaborazione: $TYPE"
             
-            docker run --rm -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
-            -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
+            # Usiamo un nome contenitore unico e forziamo la rimozione
+            docker run --rm \
+              --name "goosepaper_$TYPE" \
+              -v ${{ github.workspace }}:/mount \
+              ghcr.io/claudiotomasi/goosepaper:latest \
+              -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
+            
+            echo "Fine elaborazione: $TYPE"
+            # Un piccolo "respiro" per il sistema
+            sleep 2
           done
 
       - name: Upload to Drive (Subfolder with Date)
