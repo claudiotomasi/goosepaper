@@ -15,7 +15,7 @@ jobs:
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      -- name: Run Goosepaper for all configs
+      - name: Run Goosepaper for all configs
         run: |
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
           
