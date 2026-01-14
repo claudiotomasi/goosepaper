@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [news, news2, news3]
+        config: [news, nerd_science, altro]
 
     steps:
       - name: Checkout code
