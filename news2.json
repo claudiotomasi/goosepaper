@@ -1,0 +1,39 @@
+{
+    "font_size": 12,
+    "style" : "Prova",
+    "stories": [
+        {
+            "provider": "weather",
+            "config": {
+                "lat": 45.1850,
+                "lon": 9.1550,
+                "F": false
+            }
+        },
+        {
+            "provider": "wikipedia_current_events",
+            "config": {}
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilsole24ore.com/rss/mondo.xml ",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilpost.it/mondo/feed/",
+                "limit": 5
+            }
+        }
+    ]
+}
