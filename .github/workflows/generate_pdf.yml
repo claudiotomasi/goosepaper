@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Ti permette di continuare a lanciarlo a mano quando vuoi
   schedule:
     # 07:00 UTC = 08:00 ora italiana (solare)
-    - cron: '0 7 * * *'
+    - cron: '*/5 * * * *'  # ogni 5 minuti
 jobs:
   generate:
     runs-on: ubuntu-latest
