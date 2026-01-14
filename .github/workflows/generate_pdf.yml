@@ -63,4 +63,4 @@ jobs:
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
           # copia la cartella con la data come nome, inclusi solo i PDF
-          args: 'copy ./out gdrive: --include "*.pdf"'
+          args: 'copy ./out/${{ env.DATE }} gdrive:${{ env.DATE }} --include "*.pdf"'
