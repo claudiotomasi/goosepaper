@@ -1,28 +1,30 @@
-name: Generate Newspaper via Docker
+name: Generate Newspaper to Drive
 on: 
-  workflow_dispatch: # Questo ti permette di farlo partire con un click
+  workflow_dispatch: # Questo ti permette di lanciarlo a mano per testare
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    # Qui diciamo a GitHub di usare il TUO Docker che hai appena pushato
-    container:
-      image: ghcr.io/claudiotomasi/goosepaper:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run Goosepaper inside Docker
-        # Usiamo il file di configurazione che hai nel repo
-        run: |
-          goosepaper -c example-config.json -o IL_MIO_GIORNALE.pdf
+      - name: Set Date
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Upload PDF
-        uses: actions/upload-artifact@v4
+      - name: Run Goosepaper
+        run: |
+          docker run -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
+          goosepaper -c /mount/example-config.json -o /mount/Giornale_${{ env.DATE }}.pdf
+
+      - name: Upload to Drive
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONFIG_GDRIVE_TYPE: drive
+          RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
+          # QUI INCOLLA L'ID DELLA CARTELLA CHE HAI PRESO AL PASSO 1
+          RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          name: daily-newspaper-pdf
-          path: IL_MIO_GIORNALE.pdf
+          args: copy "Giornale_${{ env.DATE }}.pdf" gdrive:
