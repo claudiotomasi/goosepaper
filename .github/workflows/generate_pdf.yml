@@ -1,10 +1,9 @@
 name: Generate Multiple Newspapers to Drive
 
 on: 
-  workflow_dispatch:
-  # Se vuoi che parta ogni mattina alle 7:00 UTC (8:00 italiane):
+  workflow_dispatch: # Lancio manuale
   # schedule:
-  #   - cron: '0 7 * * *'
+  #   - cron: '30 6 * * *' # Opzionale: ogni mattina alle 7:30 italiane
 
 jobs:
   generate_and_upload:
@@ -18,12 +17,18 @@ jobs:
 
       - name: Run Goosepaper for all configs
         run: |
-          # Lista qui i tuoi file config (senza .json) separati da spazi
+          # 1. Scarica l'immagine una volta sola per velocizzare i passaggi successivi
+          docker pull ghcr.io/claudiotomasi/goosepaper:latest
+          
+          # 2. Inserisci qui i nomi dei tuoi file .json (senza estensione) separati da spazi
           CONFIGS=("news" "nerd_science" "altro")
           
           for TYPE in "${CONFIGS[@]}"; do
-            echo "Generazione: $TYPE"
-            docker run -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
+            echo "------------------------------------------"
+            echo "Generazione in corso: $TYPE..."
+            echo "------------------------------------------"
+            
+            docker run --rm -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
             -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
           done
 
@@ -36,5 +41,5 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          # Questo comando crea la cartella con la data e ci copia dentro tutti i PDF
+          # Copia solo i PDF e crea automaticamente la sottocartella con la data
           args: 'copy ./ gdrive:${{ env.DATE }} --include "*.pdf"'
