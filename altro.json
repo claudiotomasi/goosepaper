@@ -1,0 +1,42 @@
+{
+    "font_size": 12,
+    "style" : "Prova",
+    "stories": [
+        {
+            "provider": "weather",
+            "config": {
+                "lat": 45.1850,
+                "lon": 9.1550,
+                "F": false
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "http://feeds.bbci.co.uk/news/world/rss.xml",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://feeds.arstechnica.com/arstechnica/index",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilpost.it/bits/feed/",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.ilsole24ore.com/rss/viaggi.xml",
+                "limit": 5
+            }
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "font_size": 12,
+    "style" : "Prova",
+    "stories": [
+        {
+            "provider": "weather",
+            "config": {
+                "lat": 45.1850,
+                "lon": 9.1550,
+                "F": false
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://leganerd.com/feed/",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.focus.it/rss/scienza.rss",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.tomshw.it/feed/scienze",
+                "limit": 5
+            }
+        }
+    ]
+}

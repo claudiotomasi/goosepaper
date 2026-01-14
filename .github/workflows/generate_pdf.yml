@@ -1,10 +1,13 @@
-name: Generate Newspaper to Drive
+name: Generate Multiple Newspapers to Drive
 
 on: 
   workflow_dispatch:
+  # Se vuoi che parta ogni mattina alle 7:00 UTC (8:00 italiane):
+  # schedule:
+  #   - cron: '0 7 * * *'
 
 jobs:
-  generate:
+  generate_and_upload:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -13,12 +16,18 @@ jobs:
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Run Goosepaper
+      - name: Run Goosepaper for all configs
         run: |
-          docker run -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
-          -c /mount/example-config.json -o /mount/Giornale_${{ env.DATE }}.pdf
+          # Lista qui i tuoi file config (senza .json) separati da spazi
+          CONFIGS=("news" "nerd_sicence" "altro")
+          
+          for TYPE in "${CONFIGS[@]}"; do
+            echo "Generazione: $TYPE"
+            docker run -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
+            -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
+          done
 
-      - name: Upload to Drive
+      - name: Upload to Drive (Subfolder with Date)
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
@@ -27,4 +36,5 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          args: 'copy "Giornale_${{ env.DATE }}.pdf" gdrive:'
+          # Questo comando crea la cartella con la data e ci copia dentro tutti i PDF
+          args: 'copy ./ gdrive:${{ env.DATE }} --include "*.pdf"'
