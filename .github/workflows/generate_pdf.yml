@@ -1,13 +1,14 @@
 name: Generate Multiple Newspapers to Drive
 
-on: 
-  workflow_dispatch: # Lancio manuale
+on:
+  workflow_dispatch:
   # schedule:
-  #   - cron: '30 6 * * *' # Opzionale: ogni mattina alle 7:30 italiane
+  #   - cron: '30 6 * * *' # 7:30 italiane
 
 jobs:
   generate_and_upload:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -15,29 +16,30 @@ jobs:
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Run Goosepaper for all configs
+      - name: Generate PDFs with Goosepaper
         run: |
+          set -e
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
-          
+
           CONFIGS=("news" "news2")
-          
+
           for TYPE in "${CONFIGS[@]}"; do
-            echo "------------------------------------------"
+            echo "=========================================="
             echo "Inizio elaborazione: $TYPE"
-            
-            # Usiamo un nome contenitore unico e forziamo la rimozione
-            docker run --rm \
-              --name "goosepaper_$TYPE" \
+
+            mkdir -p out/$TYPE
+
+            timeout 10m docker run --rm --init \
               -v ${{ github.workspace }}:/mount \
               ghcr.io/claudiotomasi/goosepaper:latest \
-              -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
-            
+              -c /mount/${TYPE}.json \
+              -o /mount/out/$TYPE/${TYPE}_${{ env.DATE }}.pdf
+
             echo "Fine elaborazione: $TYPE"
-            # Un piccolo "respiro" per il sistema
             sleep 2
           done
 
-      - name: Upload to Drive (Subfolder with Date)
+      - name: Upload PDFs to Google Drive (dated folder)
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
@@ -46,5 +48,4 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          # Copia solo i PDF e crea automaticamente la sottocartella con la data
-          args: 'copy ./ gdrive:${{ env.DATE }} --include "*.pdf"'
+          args: 'copy ./out gdrive:${{ env.DATE }} --include "*.pdf"'
