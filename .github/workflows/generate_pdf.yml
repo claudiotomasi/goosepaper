@@ -2,22 +2,26 @@ name: Generate Newspapers to Drive
 
 on:
   workflow_dispatch:
+  # schedule:
+  #   - cron: '30 6 * * *' # 7:30 italiane
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         config: [news, nerd_science, altro]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set Date
+      - name: Set date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Generate PDF
+      - name: Generate PDF with Goosepaper
         run: |
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
           mkdir -p out
@@ -39,10 +43,15 @@ jobs:
     needs: generate
 
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: pdf
-          path: out
+          path: artifacts
+
+      - name: Flatten PDFs
+        run: |
+          mkdir -p out
+          find artifacts -name "*.pdf" -exec mv {} out/ \;
 
       - name: Upload to Google Drive
         uses: wei/rclone@v1
@@ -54,4 +63,3 @@ jobs:
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
           args: 'copy ./out gdrive:${{ env.DATE }} --include "*.pdf"'
-
