@@ -48,12 +48,10 @@ jobs:
 
       - name: Flatten PDFs into dated folder
         run: |
-          # crea cartella con data come nome
           mkdir -p out/${{ env.DATE }}
-          # sposta tutti i PDF dentro
           find artifacts -name "*.pdf" -exec mv {} out/${{ env.DATE }}/ \;
 
-            - name: Create folder and upload PDFs
+      - name: Create folder on Google Drive
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
@@ -62,5 +60,15 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          args: 'bash -c "rclone mkdir gdrive:${{ env.DATE }} && rclone copy ./out/${{ env.DATE }} gdrive:${{ env.DATE }} --include *.pdf'
+          args: 'mkdir gdrive:${{ env.DATE }}'
 
+      - name: Upload PDFs to Google Drive
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONFIG_GDRIVE_TYPE: drive
+          RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
+          RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
+        with:
+          args: 'copy ./out/${{ env.DATE }} gdrive:${{ env.DATE }} --include "*.pdf"'
