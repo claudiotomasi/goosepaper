@@ -1,6 +1,7 @@
 name: Generate Newspaper to Drive
+
 on: 
-  workflow_dispatch: # Questo ti permette di lanciarlo a mano per testare
+  workflow_dispatch:
 
 jobs:
   generate:
@@ -24,7 +25,6 @@ jobs:
           RCLONE_CONFIG_GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
           RCLONE_CONFIG_GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
-          # QUI INCOLLA L'ID DELLA CARTELLA CHE HAI PRESO AL PASSO 1
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
           args: copy "Giornale_${{ env.DATE }}.pdf" gdrive:
