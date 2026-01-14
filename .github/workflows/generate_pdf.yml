@@ -2,12 +2,14 @@ name: Generate Multiple Newspapers to Drive
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '30 6 * * *' # 7:30 italiane
 
 jobs:
   generate_and_upload:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        config: [news, news2]
 
     steps:
       - name: Checkout Code
@@ -16,30 +18,19 @@ jobs:
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Generate PDFs with Goosepaper
+      - name: Generate PDF with Goosepaper
         run: |
-          set -e
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
 
-          CONFIGS=("news" "news2")
+          mkdir -p out
 
-          for TYPE in "${CONFIGS[@]}"; do
-            echo "=========================================="
-            echo "Inizio elaborazione: $TYPE"
+          docker run --rm --init \
+            -v ${{ github.workspace }}:/mount \
+            ghcr.io/claudiotomasi/goosepaper:latest \
+            -c /mount/${{ matrix.config }}.json \
+            -o /mount/out/${{ matrix.config }}_${{ env.DATE }}.pdf
 
-            mkdir -p out/$TYPE
-
-            timeout 10m docker run --rm --init \
-              -v ${{ github.workspace }}:/mount \
-              ghcr.io/claudiotomasi/goosepaper:latest \
-              -c /mount/${TYPE}.json \
-              -o /mount/out/$TYPE/${TYPE}_${{ env.DATE }}.pdf
-
-            echo "Fine elaborazione: $TYPE"
-            sleep 2
-          done
-
-      - name: Upload PDFs to Google Drive (dated folder)
+      - name: Upload PDF to Google Drive
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
