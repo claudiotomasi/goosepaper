@@ -34,7 +34,7 @@ jobs:
           name: pdf-${{ matrix.config }}
           path: out/*.pdf
 
-    upload:
+  upload:
     runs-on: ubuntu-latest
     needs: generate
 
