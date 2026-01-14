@@ -29,7 +29,7 @@ jobs:
             echo "------------------------------------------"
             
             docker run --rm -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
-            -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
+            -v -c /mount/${TYPE}.json -o /mount/${TYPE}_${{ env.DATE }}.pdf
           done
 
       - name: Upload to Drive (Subfolder with Date)
