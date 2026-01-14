@@ -2,8 +2,6 @@ name: Generate Newspapers to Drive
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '30 6 * * *' # 7:30 italiane
 
 jobs:
   generate:
@@ -12,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [news, nerd_science, altro]
+        config: [news, news2, news3]
 
     steps:
       - name: Checkout code
@@ -48,10 +46,12 @@ jobs:
         with:
           path: artifacts
 
-      - name: Flatten PDFs
+      - name: Flatten PDFs into dated folder
         run: |
-          mkdir -p out
-          find artifacts -name "*.pdf" -exec mv {} out/ \;
+          # crea cartella con data come nome
+          mkdir -p out/${{ env.DATE }}
+          # sposta tutti i PDF dentro
+          find artifacts -name "*.pdf" -exec mv {} out/${{ env.DATE }}/ \;
 
       - name: Upload to Google Drive
         uses: wei/rclone@v1
@@ -62,4 +62,5 @@ jobs:
           RCLONE_CONFIG_GDRIVE_TOKEN: ${{ secrets.RCLONE_CONFIG_PASS }}
           RCLONE_CONFIG_GDRIVE_ROOT_FOLDER_ID: "1DtC3Da1Q1-TY8TBVbFXmHn9lDgSb_ehA"
         with:
-          args: 'copy ./out gdrive:${{ env.DATE }} --include "*.pdf"'
+          # copia la cartella con la data come nome, inclusi solo i PDF
+          args: 'copy ./out gdrive: --include "*.pdf"'
