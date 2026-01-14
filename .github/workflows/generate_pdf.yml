@@ -19,7 +19,7 @@ jobs:
       - name: Run Goosepaper for all configs
         run: |
           # Lista qui i tuoi file config (senza .json) separati da spazi
-          CONFIGS=("news" "nerd_sicence" "altro")
+          CONFIGS=("news" "nerd_science" "altro")
           
           for TYPE in "${CONFIGS[@]}"; do
             echo "Generazione: $TYPE"
