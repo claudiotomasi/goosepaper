@@ -1,27 +1,25 @@
-name: Generate Multiple Newspapers to Drive
+name: Generate Newspapers to Drive
 
 on:
   workflow_dispatch:
 
 jobs:
-  generate_and_upload:
+  generate:
     runs-on: ubuntu-latest
-
     strategy:
+      fail-fast: false
       matrix:
-        config: [news, nerd_science]
+        config: [news, nerd_science, altro]
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set Date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Generate PDF with Goosepaper
+      - name: Generate PDF
         run: |
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
-
           mkdir -p out
 
           docker run --rm --init \
@@ -30,7 +28,22 @@ jobs:
             -c /mount/${{ matrix.config }}.json \
             -o /mount/out/${{ matrix.config }}_${{ env.DATE }}.pdf
 
-      - name: Upload PDF to Google Drive
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-${{ matrix.config }}
+          path: out/*.pdf
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: generate
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+
+      - name: Upload to Google Drive
         uses: wei/rclone@v1
         env:
           RCLONE_CONFIG_GDRIVE_TYPE: drive
