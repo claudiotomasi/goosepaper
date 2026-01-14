@@ -16,7 +16,7 @@ jobs:
       - name: Run Goosepaper
         run: |
           docker run -v ${{ github.workspace }}:/mount ghcr.io/claudiotomasi/goosepaper:latest \
-          goosepaper -c /mount/example-config.json -o /mount/Giornale_${{ env.DATE }}.pdf
+          -c /mount/example-config.json -o /mount/Giornale_${{ env.DATE }}.pdf
 
       - name: Upload to Drive
         uses: wei/rclone@v1
