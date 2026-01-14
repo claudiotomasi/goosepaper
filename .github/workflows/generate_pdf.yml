@@ -21,7 +21,7 @@ jobs:
           docker pull ghcr.io/claudiotomasi/goosepaper:latest
           
           # 2. Inserisci qui i nomi dei tuoi file .json (senza estensione) separati da spazi
-          CONFIGS=("news" "nerd_science" "altro")
+          CONFIGS=("news" "altro")
           
           for TYPE in "${CONFIGS[@]}"; do
             echo "------------------------------------------"
