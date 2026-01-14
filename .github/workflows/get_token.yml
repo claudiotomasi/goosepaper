@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       rm_code:
-        description: 'Inserisci il codice di 8 lettere di reMarkable'
+        description: 'Codice di 8 lettere da my.remarkable.com'
         required: true
 
 jobs:
@@ -12,15 +12,17 @@ jobs:
     steps:
       - name: Generate Token
         run: |
-          # Scarichiamo l'ultima versione di rMview o un client compatibile
-          # In questo caso usiamo un semplice script python che parla con le nuove API
           pip install rmapy
           python -c "
-          from rmapy.api import rMapi
-          rm = rMapi()
-          token = rm.register_device('${{ github.event.inputs.rm_code }}')
-          print('*****************************************')
-          print('IL TUO DEVICE TOKEN E:')
-          print(token)
-          print('*****************************************')
+          import rmapy.api
+          rm = rmapy.api.Client()
+          try:
+              # La registrazione restituisce direttamente il token
+              token = rm.register_device('${{ github.event.inputs.rm_code }}')
+              print('\n' + '*' * 40)
+              print('IL TUO DEVICE TOKEN E:')
+              print(token)
+              print('*' * 40 + '\n')
+          except Exception as e:
+              print(f'Errore durante la registrazione: {e}')
           "
