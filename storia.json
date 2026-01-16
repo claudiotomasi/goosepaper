@@ -11,28 +11,31 @@
             }
         },
         {
-            "provider": "wikipedia_current_events",
-            "config": {}
-        },
-        {
             "provider": "rss",
             "config": {
-                "rss_path": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
-                "limit": 4
+                "rss_path": "https://publicdomainreview.org/feed",
+                "limit": 5
             }
         },
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://www.ilsole24ore.com/rss/mondo.xml ",
-                "limit": 4
+                "rss_path": "https://www.archeome.it/feed/",
+                "limit": 5
             }
         },
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://www.ilpost.it/mondo/feed/",
-                "limit": 4
+                "rss_path": "https://www.festivaldelmedioevo.it/portal/feed/",
+                "limit": 5
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.historiaregni.it/feed/",
+                "limit": 5
             }
         }
     ]

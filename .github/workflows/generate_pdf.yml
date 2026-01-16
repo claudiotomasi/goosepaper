@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [news, nerd_science, altro]
+        config: [news, nerd_science, altro, storia]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

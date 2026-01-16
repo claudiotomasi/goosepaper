@@ -14,7 +14,7 @@
             "provider": "rss",
             "config": {
                 "rss_path": "https://leganerd.com/feed/",
-                "limit": 5
+                "limit": 3
             }
         },
         {
