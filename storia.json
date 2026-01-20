@@ -51,7 +51,7 @@
                 "rss_path": "http://www.historytoday.com/feed/rss.xml",
                 "limit": 3
             }
-        }
+        },
         {
             "provider": "rss",
             "config": {
