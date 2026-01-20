@@ -1,0 +1,53 @@
+{
+    "font_size": 12,
+    "style" : "Prova",
+    "stories": [
+        {
+            "provider": "weather",
+            "config": {
+                "lat": 45.1850,
+                "lon": 9.1550,
+                "F": false
+            }
+        },
+        {
+            "provider": "wikipedia_current_events",
+            "config": {}
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.helpingwritersbecomeauthors.com/feed/",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.janefriedman.com/feed/",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://thewritepractice.com/feed/",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://www.themarginalian.org/feed/",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://readerforblind.com/feed",
+                "limit": 3
+            }
+        }
+    ]
+}
