@@ -13,29 +13,57 @@
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://publicdomainreview.org/feed",
-                "limit": 5
+                "rss_path": "https://www.focus.it/rss/cultura.rss",
+                "limit": 3
             }
         },
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://www.archeome.it/feed/",
-                "limit": 5
+                "rss_path": "https://storiainrete.com/feed",
+                "limit": 3
             }
         },
         {
             "provider": "rss",
             "config": {
-                "rss_path": "https://www.festivaldelmedioevo.it/portal/feed/",
-                "limit": 5
+                "rss_path": "https://istorica.it/feed/",
+                "limit": 3
             }
         },
         {
             "provider": "rss",
             "config": {
                 "rss_path": "https://www.historiaregni.it/feed/",
-                "limit": 5
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://thehistoryblog.com/feed",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "http://www.historytoday.com/feed/rss.xml",
+                "limit": 3
+            }
+        }
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://medievalists.net/feed",
+                "limit": 3
+            }
+        },
+        {
+            "provider": "rss",
+            "config": {
+                "rss_path": "https://histofreak.com/feed",
+                "limit": 3
             }
         }
     ]
