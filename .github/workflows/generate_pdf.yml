@@ -9,6 +9,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 5
       fail-fast: false
       matrix:
         config: [news, nerd_science, altro, storia, scrittura]
